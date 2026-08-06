@@ -1,5 +1,5 @@
 import Navbar from "../components/layout/Navbar";
-import Footer from "../components/layout/Footer";
+;
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 
@@ -23,7 +23,9 @@ const healthcareSolutions = [
   {
     icon: <FaHeartbeat size={45} />,
     image:
-      "https://images.unsplash.com/photo-1538108149393-fbbd81895907?w=90",
+      
+  
+"https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=1200",
     title: "di Oncology",
     desc:
       "Complete Oncology Management System for chemotherapy planning, treatment workflow, nursing records and discharge management."
@@ -301,7 +303,7 @@ function Technologies() {
 
       </section>
 
-      <Footer />
+     
 
     </>
   );

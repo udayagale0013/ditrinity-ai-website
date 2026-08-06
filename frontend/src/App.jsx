@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 
 import Navbar from "./components/layout/Navbar";
 import Footer from "./components/layout/Footer";
+import ScrollToTop from "./components/ScrollToTop";
 
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -13,11 +14,12 @@ import Industries from "./pages/Industries";
 import AISolutions from "./pages/AISolutions";
 import Apply from "./pages/Apply";
 
-
 function App() {
   return (
     <>
       <Navbar />
+
+      <ScrollToTop />
 
       <Routes>
 
@@ -27,22 +29,34 @@ function App() {
 
         <Route path="/services" element={<Services />} />
 
-        <Route path="/ai-solutions" element={<AISolutions />} />
-
-        <Route 
-          path="/technologies" 
-          element={<HealthcareSolutions />} 
+        <Route
+          path="/ai-solutions"
+          element={<AISolutions />}
         />
 
-        <Route path="/industries" element={<Industries />} />
+        <Route
+          path="/technologies"
+          element={<HealthcareSolutions />}
+        />
 
-        <Route path="/careers" element={<Careers />} />
+        <Route
+          path="/industries"
+          element={<Industries />}
+        />
 
-        <Route path="/contact" element={<Contact />} />
+        <Route
+          path="/careers"
+          element={<Careers />}
+        />
 
-        <Route 
-          path="/apply/:jobTitle" 
-          element={<Apply />} 
+        <Route
+          path="/contact"
+          element={<Contact />}
+        />
+
+        <Route
+          path="/apply/:jobTitle"
+          element={<Apply />}
         />
 
       </Routes>

@@ -1,5 +1,5 @@
 import Navbar from "../components/layout/Navbar";
-import Footer from "../components/layout/Footer";
+
 import { motion } from "framer-motion";
 import {
   FaBullseye,
@@ -456,7 +456,7 @@ function About() {
       </section>
 
 
-      <Footer />
+      
 
 
     </>

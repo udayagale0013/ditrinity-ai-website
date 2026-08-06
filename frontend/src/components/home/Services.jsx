@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import Footer from "../layout/Footer";
+import { Link } from "react-router-dom";
 
 const services = [
   {
@@ -281,23 +281,25 @@ function Services() {
               solutions.
             </p>
 
-            <button
-              className="
-              mt-10
-              bg-white
-              text-slate-900
-              px-10
-              py-4
-              rounded-xl
-              font-bold
-              text-lg
-              hover:scale-105
-              hover:shadow-2xl
-              duration-300
-              "
-            >
-              Talk To Our Cloud Experts
-            </button>
+            <Link
+  to="/contact"
+  className="
+  inline-block
+  mt-10
+  bg-white
+  text-slate-900
+  px-10
+  py-4
+  rounded-xl
+  font-bold
+  text-lg
+  hover:scale-105
+  hover:shadow-2xl
+  duration-300
+  "
+>
+  Talk To Our Cloud Experts
+</Link>
 
           </motion.div>
 
@@ -305,8 +307,7 @@ function Services() {
 
       </section>
 
-      <Footer />
-
+      
     </>
   );
 }

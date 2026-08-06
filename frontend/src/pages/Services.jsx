@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
-import Footer from "../components/layout/Footer";
 
+import { Link } from "react-router-dom";
 const services = [
   {
     title: "Cloud Architecture & Design",
@@ -409,17 +409,15 @@ CI/CD Automation
 {/* Changed Wire Image */}
 
 <img
-
-src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=1400"
-
-className="
-h-full
-w-full
-object-cover
-hover:scale-105
-duration-700
-"
-
+  src="https://media.licdn.com/dms/image/v2/C4E12AQGoOSM6VPW_2g/article-cover_image-shrink_720_1280/article-cover_image-shrink_720_1280/0/1568331259547?e=2147483647&v=beta&t=-M77jmQl50Z97vF1wVCXgrxkemc_t3Vs5lfKAkaBfhs"
+  alt="Cloud Consulting"
+  className="
+    h-full
+    w-full
+    object-cover
+    hover:scale-105
+    duration-700
+  "
 />
 
 
@@ -500,6 +498,8 @@ cloud solutions.
 
 
 
+<Link to="/contact">
+
 <button
 
 className="
@@ -522,6 +522,7 @@ Talk To Our Cloud Experts
 
 </button>
 
+</Link>
 
 
 </motion.div>
@@ -534,7 +535,7 @@ Talk To Our Cloud Experts
 
 
 
-<Footer />
+
 
 
 </>

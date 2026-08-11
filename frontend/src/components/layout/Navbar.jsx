@@ -6,25 +6,36 @@ function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const navClass = ({ isActive }) =>
-    `pb-2 transition-all duration-300 border-b-2 ${
+    `pb-2 transition-all duration-300 border-b-2 whitespace-nowrap ${
       isActive
         ? "border-blue-500 text-white"
         : "border-transparent text-gray-300 hover:text-blue-500"
     }`;
 
   return (
-    <nav className="fixed top-0 left-0 w-full bg-[#0F172A]/90 backdrop-blur-md border-b border-gray-800 z-50">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 h-20 flex items-center justify-between">
+    <nav className="w-full bg-[#111827] border-b border-gray-800">
+
+      {/* Desktop Navbar */}
+      <div className="max-w-[1600px] mx-auto px-6 py-3 flex items-center gap-6">
 
         {/* Logo */}
-        <NavLink to="/">
-          <h1 className="text-3xl font-bold text-white cursor-pointer">
-            <span className="text-blue-500">di</span>Trinity
-          </h1>
+        <NavLink
+          to="/"
+          className="flex flex-col items-start shrink-0"
+        >
+          <img
+            src="/blob-1f93b35.png"
+            alt="diTrinity"
+            className="h-11 w-auto object-contain"
+          />
+
+          <span className="text-[9px] text-white whitespace-nowrap mt-0.5">
+            Enriching Lives with Digital Transformation
+          </span>
         </NavLink>
 
         {/* Desktop Menu */}
-        <ul className="hidden md:flex gap-8 text-gray-300 font-medium">
+        <ul className="hidden md:flex items-center justify-center gap-5 text-gray-300 font-medium whitespace-nowrap flex-1 min-w-0">
 
           <li>
             <NavLink to="/" end className={navClass}>
@@ -79,15 +90,16 @@ function Navbar() {
         {/* Desktop Button */}
         <Link
           to="/contact"
-          className="hidden md:block bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg transition duration-300"
+          className="hidden md:block shrink-0 bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-lg transition duration-300 whitespace-nowrap"
         >
           Talk to Expert
         </Link>
 
         {/* Mobile Menu Icon */}
         <button
-          className="md:hidden text-white text-2xl"
+          className="md:hidden ml-auto text-white text-2xl"
           onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Toggle menu"
         >
           {menuOpen ? <FaTimes /> : <FaBars />}
         </button>
@@ -105,49 +117,73 @@ function Navbar() {
           <ul className="flex flex-col gap-5 text-gray-300 font-medium">
 
             <li>
-              <NavLink to="/" onClick={() => setMenuOpen(false)}>
+              <NavLink
+                to="/"
+                onClick={() => setMenuOpen(false)}
+              >
                 Home
               </NavLink>
             </li>
 
             <li>
-              <NavLink to="/about" onClick={() => setMenuOpen(false)}>
+              <NavLink
+                to="/about"
+                onClick={() => setMenuOpen(false)}
+              >
                 About
               </NavLink>
             </li>
 
             <li>
-              <NavLink to="/services" onClick={() => setMenuOpen(false)}>
+              <NavLink
+                to="/services"
+                onClick={() => setMenuOpen(false)}
+              >
                 Cloud Services
               </NavLink>
             </li>
 
             <li>
-              <NavLink to="/ai-solutions" onClick={() => setMenuOpen(false)}>
+              <NavLink
+                to="/ai-solutions"
+                onClick={() => setMenuOpen(false)}
+              >
                 Digital Solutions
               </NavLink>
             </li>
 
             <li>
-              <NavLink to="/technologies" onClick={() => setMenuOpen(false)}>
+              <NavLink
+                to="/technologies"
+                onClick={() => setMenuOpen(false)}
+              >
                 Healthcare Solutions
               </NavLink>
             </li>
 
             <li>
-              <NavLink to="/industries" onClick={() => setMenuOpen(false)}>
+              <NavLink
+                to="/industries"
+                onClick={() => setMenuOpen(false)}
+              >
                 Industries
               </NavLink>
             </li>
 
             <li>
-              <NavLink to="/careers" onClick={() => setMenuOpen(false)}>
+              <NavLink
+                to="/careers"
+                onClick={() => setMenuOpen(false)}
+              >
                 Careers
               </NavLink>
             </li>
 
             <li>
-              <NavLink to="/contact" onClick={() => setMenuOpen(false)}>
+              <NavLink
+                to="/contact"
+                onClick={() => setMenuOpen(false)}
+              >
                 Contact
               </NavLink>
             </li>
@@ -165,6 +201,7 @@ function Navbar() {
 
         </div>
       </div>
+
     </nav>
   );
 }

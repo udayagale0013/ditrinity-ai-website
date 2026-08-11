@@ -4,7 +4,7 @@ import AISolutionsSection from "../components/home/AISolutions";
 function AISolutions() {
   return (
     <>
-      <Navbar />
+      
       <AISolutionsSection />
     </>
   );

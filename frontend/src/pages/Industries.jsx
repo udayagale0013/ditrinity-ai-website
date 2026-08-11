@@ -74,7 +74,7 @@ const industries = [
 function Industries() {
   return (
 
-    <section className="bg-[#0F172A] min-h-screen py-24">
+    <section className="bg-[#0F172A] min-h-screen pt-4 pb-24">
 
       <div className="max-w-7xl mx-auto px-8">
 

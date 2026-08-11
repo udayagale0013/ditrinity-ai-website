@@ -124,8 +124,8 @@ function Apply() {
   };
 
   return (
-    <section className="bg-[#0F172A] min-h-screen py-24">
-      <div className="max-w-3xl mx-auto px-6">
+    <section className="min-h-screen bg-[#0F172A] pt-6 pb-24">
+      <div className="max-w-4xl mx-auto px-6">
 
         <motion.div
           initial={{ opacity: 0, y: -50 }}

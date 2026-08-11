@@ -43,7 +43,7 @@ function ChatBot() {
 
     try {
       const res = await axios.post(
-        "http://127.0.0.1:8000/chat",
+        "192.168.1.8:8000",
         {
           message: userInput,
         }

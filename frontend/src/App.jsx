@@ -17,12 +17,12 @@ import Apply from "./pages/Apply";
 function App() {
   return (
     <>
+      {/* Navbar - only once */}
       <Navbar />
 
       <ScrollToTop />
 
       <Routes>
-
         <Route path="/" element={<Home />} />
 
         <Route path="/about" element={<About />} />
@@ -58,7 +58,6 @@ function App() {
           path="/apply/:jobTitle"
           element={<Apply />}
         />
-
       </Routes>
 
       <Footer />

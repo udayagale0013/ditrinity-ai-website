@@ -5,8 +5,8 @@ function Hero() {
   const navigate = useNavigate();
 
   return (
-    <section className="relative min-h-screen pt-24 lg:pt-28 overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-gray-950 flex items-center">
-
+    
+<section className="relative bg-[#0F172A] min-h-screen pt-8 pb-24 overflow-hidden">
       {/* Background Blur */}
       <div className="absolute w-96 h-96 bg-cyan-500/20 blur-[150px] rounded-full top-0 -left-20"></div>
       <div className="absolute w-96 h-96 bg-indigo-600/20 blur-[150px] rounded-full bottom-0 right-0"></div>

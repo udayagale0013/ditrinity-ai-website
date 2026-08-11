@@ -61,7 +61,7 @@ function Contact() {
   };
 
   return (
-    <section className="min-h-screen bg-[#0F172A] py-24">
+    <section className="min-h-screen bg-[#0F172A] pt-4 pb-24">
 
       <div className="max-w-7xl mx-auto px-8">
 

@@ -1,4 +1,4 @@
-import Navbar from "../components/layout/Navbar";
+
 
 import { motion } from "framer-motion";
 import {
@@ -16,9 +16,9 @@ import { Link } from "react-router-dom";
 function About() {
   return (
     <>
-      <Navbar />
+      
 
-      <section className="bg-[#0F172A] min-h-screen py-24">
+      <section className="bg-[#0F172A] min-h-screen pt-8 pb-24">
 
         <div className="max-w-7xl mx-auto px-8">
 

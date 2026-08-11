@@ -1,5 +1,3 @@
-import Navbar from "../components/layout/Navbar";
-;
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 
@@ -53,9 +51,9 @@ const healthcareSolutions = [
 function Technologies() {
   return (
     <>
-      <Navbar />
+      
 
-      <section className="bg-slate-950 pt-32 pb-24">
+      <section className="bg-slate-950 pt-4 pb-24">
 
         <div className="max-w-7xl mx-auto px-8">
 

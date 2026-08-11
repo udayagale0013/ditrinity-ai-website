@@ -12,7 +12,9 @@ from datetime import datetime
 from routes.contact import router as contact_router
 from routes.chat import router as chat_router
 from routes.contact import router as contact_router
-
+from routes.reviews import router as reviews_router
+import smtplib
+from email.message import EmailMessage
 # --------------------------------
 # Environment
 # --------------------------------
@@ -45,6 +47,7 @@ app.add_middleware(
 
 app.include_router(contact_router)
 app.include_router(chat_router)
+app.include_router(reviews_router)
 # --------------------------------
 # Database
 # --------------------------------
@@ -304,25 +307,24 @@ Resume:
 # --------------------------------
 # APPLY / JOB APPLICATION
 # --------------------------------
+# --------------------------------
+# APPLY / JOB APPLICATION
+# --------------------------------
 
 @app.post("/apply")
 async def apply(
-
     name: str = Form(...),
-
     email: str = Form(...),
-
     skills: str = Form(...),
-
     position: str = Form(...),
-
     resume: UploadFile = File(...)
-
 ):
 
     try:
 
+        # --------------------------------
         # Check resume type
+        # --------------------------------
 
         filename = resume.filename.lower()
 
@@ -336,7 +338,9 @@ async def apply(
                 "message": "Only PDF and DOCX resumes are supported."
             }
 
+        # --------------------------------
         # Safe filename
+        # --------------------------------
 
         safe_filename = os.path.basename(
             resume.filename
@@ -355,7 +359,9 @@ async def apply(
             saved_filename
         )
 
-        # Save resume
+        # --------------------------------
+        # Save Resume
+        # --------------------------------
 
         with open(
             resume_path,
@@ -367,7 +373,9 @@ async def apply(
                 buffer
             )
 
-        # Save application
+        # --------------------------------
+        # Save Application in Database
+        # --------------------------------
 
         conn = sqlite3.connect(DATABASE)
 
@@ -408,6 +416,121 @@ async def apply(
 
         conn.close()
 
+        # --------------------------------
+        # SEND EMAIL TO HR
+        # --------------------------------
+
+        try:
+
+            gmail_address = os.getenv("GMAIL_USER")
+            gmail_password = os.getenv("GMAIL_APP_PASSWORD")
+            hr_email = os.getenv("ADMIN_EMAIL")
+
+            msg = EmailMessage()
+
+            msg["Subject"] = (
+                f"New Job Application - {position}"
+            )
+
+            msg["From"] = gmail_address
+
+            msg["To"] = hr_email
+
+            msg.set_content(
+                f"""
+New Job Application Received
+
+--------------------------------
+
+Application ID:
+{application_id}
+
+Candidate Name:
+{name}
+
+Candidate Email:
+{email}
+
+Position Applied For:
+{position}
+
+Skills:
+{skills}
+
+Submitted At:
+{submitted_at}
+
+Resume:
+{safe_filename}
+
+--------------------------------
+
+Please find the candidate's resume attached.
+"""
+            )
+
+            # Attach Resume
+
+            with open(
+                resume_path,
+                "rb"
+            ) as resume_file:
+
+                resume_data = resume_file.read()
+
+            if filename.endswith(".pdf"):
+
+                msg.add_attachment(
+                    resume_data,
+                    maintype="application",
+                    subtype="pdf",
+                    filename=safe_filename
+                )
+
+            elif filename.endswith(".docx"):
+
+                msg.add_attachment(
+                    resume_data,
+                    maintype="application",
+                    subtype="vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    filename=safe_filename
+                )
+
+            # Connect Gmail SMTP
+
+            with smtplib.SMTP(
+                "smtp.gmail.com",
+                587
+            ) as server:
+
+                server.starttls()
+
+                server.login(
+                    gmail_address,
+                    gmail_password
+                )
+
+                server.send_message(msg)
+
+            print(
+                "APPLICATION EMAIL SENT SUCCESSFULLY"
+            )
+
+        except Exception as mail_error:
+
+            # Application is already saved.
+            # Don't fail the application because
+            # email failed.
+
+            print(
+                "APPLICATION EMAIL ERROR:",
+                mail_error
+            )
+
+        # --------------------------------
+        # Success Response
+        # --------------------------------
+
         return {
             "success": True,
             "message": "Application submitted successfully!",
@@ -416,7 +539,10 @@ async def apply(
 
     except Exception as e:
 
-        print("APPLICATION ERROR:", e)
+        print(
+            "APPLICATION ERROR:",
+            e
+        )
 
         return {
             "success": False,

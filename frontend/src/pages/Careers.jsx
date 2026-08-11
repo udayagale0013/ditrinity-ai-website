@@ -1,4 +1,3 @@
-import Navbar from "../components/layout/Navbar";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 
@@ -12,7 +11,8 @@ import {
 
 const jobs = [
   {
-    icon: <FaBrain size={35} />,
+    slug: "ai-engineer",
+    icon: <FaBrain />,
     title: "AI Engineer",
     location: "Pune, India",
     type: "Full Time",
@@ -20,7 +20,8 @@ const jobs = [
   },
 
   {
-    icon: <FaLaptopCode size={35} />,
+    slug: "full-stack-developer",
+    icon: <FaLaptopCode />,
     title: "Full Stack Developer",
     location: "Pune, India",
     type: "Full Time",
@@ -28,7 +29,8 @@ const jobs = [
   },
 
   {
-    icon: <FaCloud size={35} />,
+    slug: "cloud-engineer",
+    icon: <FaCloud />,
     title: "Cloud Engineer",
     location: "Remote",
     type: "Full Time",
@@ -36,7 +38,8 @@ const jobs = [
   },
 
   {
-    icon: <FaDatabase size={35} />,
+    slug: "plm-erp-consultant",
+    icon: <FaDatabase />,
     title: "PLM / ERP Consultant",
     location: "Hybrid",
     type: "Full Time",
@@ -46,176 +49,152 @@ const jobs = [
 
 function Careers() {
   return (
-    <>
-      <Navbar />
+    <section className="min-h-screen bg-[#0F172A] pt-4 pb-24">
 
-      <section className="min-h-screen bg-[#0F172A] py-24">
+      <div className="max-w-7xl mx-auto px-8">
 
-        <div className="max-w-7xl mx-auto px-8">
+        {/* HERO */}
+        <motion.div
+          initial={{ opacity: 0, y: -60 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="text-center"
+        >
+          <h1 className="text-5xl font-bold text-white">
+            Join Our
+            <span className="text-cyan-400"> Team</span>
+          </h1>
 
-          <motion.div
-            initial={{ opacity: 0, y: -60 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: .8 }}
-            className="text-center"
-          >
+          <p className="text-gray-400 mt-6 text-lg max-w-3xl mx-auto leading-8">
+            Be part of a passionate team building AI, Cloud, Enterprise
+            Software and Digital Transformation solutions for customers
+            across the globe.
+          </p>
+        </motion.div>
 
-            <h1 className="text-5xl font-bold text-white">
-              Join Our
-              <span className="text-cyan-400"> Team</span>
-            </h1>
+        {/* WHY JOIN US */}
+        <motion.div
+          initial={{ opacity: 0, y: 60 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="mt-20"
+        >
+          <div className="grid md:grid-cols-3 gap-8">
 
-            <p className="text-gray-400 mt-6 text-lg max-w-3xl mx-auto leading-8">
-              Be part of a passionate team building AI,
-              Cloud, Enterprise Software and Digital
-              Transformation solutions for customers
-              across the globe.
+            {/* Card 1 */}
+            <motion.div
+              whileHover={{ y: -10, scale: 1.03 }}
+              className="bg-[#111827] rounded-2xl overflow-hidden border border-gray-700 hover:border-cyan-400 hover:shadow-[0_20px_60px_rgba(34,211,238,.25)] duration-500"
+            >
+              <img
+                src="https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&cs=tinysrgb&w=900"
+                className="w-full h-52 object-cover"
+                alt="Innovative Projects"
+              />
+
+              <div className="p-7">
+                <h3 className="text-2xl font-bold text-white">
+                  Innovative Projects
+                </h3>
+
+                <p className="text-gray-400 mt-4 leading-7">
+                  Build AI, Cloud, Enterprise Software and Digital
+                  Transformation solutions for global customers.
+                </p>
+              </div>
+            </motion.div>
+
+            {/* Card 2 */}
+            <motion.div
+              whileHover={{ y: -10, scale: 1.03 }}
+              className="bg-[#111827] rounded-2xl overflow-hidden border border-gray-700 hover:border-cyan-400 hover:shadow-[0_20px_60px_rgba(34,211,238,.25)] duration-500"
+            >
+              <img
+                src="https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=900"
+                className="w-full h-52 object-cover"
+                alt="Career Growth"
+              />
+
+              <div className="p-7">
+                <h3 className="text-2xl font-bold text-white">
+                  Career Growth
+                </h3>
+
+                <p className="text-gray-400 mt-4 leading-7">
+                  Learn from experienced professionals, earn certifications
+                  and accelerate your career.
+                </p>
+              </div>
+            </motion.div>
+
+            {/* Card 3 */}
+            <motion.div
+              whileHover={{ y: -10, scale: 1.03 }}
+              className="bg-[#111827] rounded-2xl overflow-hidden border border-gray-700 hover:border-cyan-400 hover:shadow-[0_20px_60px_rgba(34,211,238,.25)] duration-500"
+            >
+              <img
+                src="https://images.pexels.com/photos/1181406/pexels-photo-1181406.jpeg?auto=compress&cs=tinysrgb&w=900"
+                className="w-full h-52 object-cover"
+                alt="Flexible Workplace"
+              />
+
+              <div className="p-7">
+                <h3 className="text-2xl font-bold text-white">
+                  Flexible Workplace
+                </h3>
+
+                <p className="text-gray-400 mt-4 leading-7">
+                  Hybrid, Remote and Office work culture with modern
+                  technologies and collaborative teams.
+                </p>
+              </div>
+            </motion.div>
+
+          </div>
+        </motion.div>
+
+        {/* CURRENT OPENINGS */}
+        <motion.div
+          initial={{ opacity: 0, y: 60 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="mt-24"
+        >
+
+          <div className="text-center">
+
+            <h2 className="text-4xl font-bold text-white">
+              Current Openings
+            </h2>
+
+            <p className="text-gray-400 mt-5 text-lg">
+              Explore exciting career opportunities and become part of our
+              growing team.
             </p>
 
-          </motion.div>
-                    {/* Why Join Us */}
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 60 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="mt-20"
-          >
+          <div className="grid md:grid-cols-2 gap-8 mt-14">
 
-            <div className="grid md:grid-cols-3 gap-8">
+            {jobs.map((job, index) => (
 
               <motion.div
+                key={job.slug}
+                initial={{ opacity: 0, y: 60 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{
+                  duration: 0.6,
+                  delay: index * 0.15,
+                }}
                 whileHover={{
                   y: -10,
                   scale: 1.03,
                 }}
-                className="bg-[#111827] rounded-2xl overflow-hidden border border-gray-700 hover:border-cyan-400 hover:shadow-[0_20px_60px_rgba(34,211,238,.25)] duration-500"
-              >
-
-                <img
-                  src="https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&cs=tinysrgb&w=900"
-                  className="w-full h-52 object-cover"
-                  alt=""
-                />
-
-                <div className="p-7">
-
-                  <h3 className="text-2xl font-bold text-white">
-                    Innovative Projects
-                  </h3>
-
-                  <p className="text-gray-400 mt-4 leading-7">
-                    Build AI, Cloud, Enterprise Software and Digital
-                    Transformation solutions for global customers.
-                  </p>
-
-                </div>
-
-              </motion.div>
-
-              <motion.div
-                whileHover={{
-                  y: -10,
-                  scale: 1.03,
-                }}
-                className="bg-[#111827] rounded-2xl overflow-hidden border border-gray-700 hover:border-cyan-400 hover:shadow-[0_20px_60px_rgba(34,211,238,.25)] duration-500"
-              >
-
-                <img
-                  src="https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=900"
-                  className="w-full h-52 object-cover"
-                  alt=""
-                />
-
-                <div className="p-7">
-
-                  <h3 className="text-2xl font-bold text-white">
-                    Career Growth
-                  </h3>
-
-                  <p className="text-gray-400 mt-4 leading-7">
-                    Learn from experienced professionals, earn
-                    certifications and accelerate your career.
-                  </p>
-
-                </div>
-
-              </motion.div>
-
-              <motion.div
-                whileHover={{
-                  y: -10,
-                  scale: 1.03,
-                }}
-                className="bg-[#111827] rounded-2xl overflow-hidden border border-gray-700 hover:border-cyan-400 hover:shadow-[0_20px_60px_rgba(34,211,238,.25)] duration-500"
-              >
-
-                <img
-                  src="https://images.pexels.com/photos/1181406/pexels-photo-1181406.jpeg?auto=compress&cs=tinysrgb&w=900"
-                  className="w-full h-52 object-cover"
-                  alt=""
-                />
-
-                <div className="p-7">
-
-                  <h3 className="text-2xl font-bold text-white">
-                    Flexible Workplace
-                  </h3>
-
-                  <p className="text-gray-400 mt-4 leading-7">
-                    Hybrid, Remote and Office work culture with
-                    modern technologies and collaborative teams.
-                  </p>
-
-                </div>
-
-              </motion.div>
-
-            </div>
-
-          </motion.div>
-                    {/* Current Openings */}
-
-          <motion.div
-            initial={{ opacity: 0, y: 60 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="mt-24"
-          >
-
-            <div className="text-center">
-
-              <h2 className="text-4xl font-bold text-white">
-                Current Openings
-              </h2>
-
-              <p className="text-gray-400 mt-5 text-lg">
-                Explore exciting career opportunities and become part of our growing team.
-              </p>
-
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-8 mt-14">
-
-              {jobs.map((job, index) => (
-
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 60 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{
-                    duration: 0.6,
-                    delay: index * 0.15,
-                  }}
-                  whileHover={{
-                    y: -10,
-                    scale: 1.03,
-                  }}
-                  className="
+                className="
                   bg-[#111827]
                   rounded-2xl
                   border
@@ -224,29 +203,34 @@ function Careers() {
                   hover:shadow-[0_20px_60px_rgba(34,211,238,.25)]
                   p-8
                   duration-500
-                  "
-                >
+                "
+              >
 
-                  <div className="w-16 h-16 rounded-full bg-cyan-500 flex items-center justify-center text-white mb-6">
-                    {job.icon}
-                  </div>
+                {/* ICON */}
+                <div className="w-16 h-16 rounded-full bg-cyan-500 flex items-center justify-center text-white text-2xl mb-6">
+                  {job.icon}
+                </div>
 
-                  <h2 className="text-2xl font-bold text-white">
-                    {job.title}
-                  </h2>
+                {/* TITLE */}
+                <h2 className="text-2xl font-bold text-white">
+                  {job.title}
+                </h2>
 
-                  <p className="text-cyan-400 mt-2">
-                    {job.location} • {job.type}
-                  </p>
+                {/* LOCATION */}
+                <p className="text-cyan-400 mt-2">
+                  {job.location} • {job.type}
+                </p>
 
-                  <p className="text-gray-400 mt-5 leading-8">
-                    {job.desc}
-                  </p>
+                {/* DESCRIPTION */}
+                <p className="text-gray-400 mt-5 leading-8">
+                  {job.desc}
+                </p>
 
-                  <Link to={`/apply/${job.title}`}>
+                {/* APPLY */}
+                <Link to={`/apply/${job.slug}`}>
 
-                    <button
-                      className="
+                  <button
+                    className="
                       mt-8
                       bg-cyan-500
                       hover:bg-cyan-600
@@ -259,57 +243,58 @@ function Careers() {
                       items-center
                       gap-3
                       duration-300
-                      "
-                    >
-                      Apply Now
-                      <FaArrowRight />
-                    </button>
+                    "
+                  >
+                    Apply Now
+                    <FaArrowRight />
+                  </button>
 
-                  </Link>
+                </Link>
 
-                </motion.div>
+              </motion.div>
 
-              ))}
+            ))}
 
-            </div>
+          </div>
 
-          </motion.div>
-                    {/* Upload Resume CTA */}
+        </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 60 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="mt-24"
-          >
+        {/* UPLOAD RESUME CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 60 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="mt-24"
+        >
 
-            <div className="
+          <div
+            className="
               bg-gradient-to-r
               from-cyan-600
               to-blue-700
               rounded-3xl
               p-12
               text-center
-            ">
+            "
+          >
 
-              <h2 className="text-4xl font-bold text-white">
-                Didn't Find a Suitable Role?
-              </h2>
+            <h2 className="text-4xl font-bold text-white">
+              Didn't Find a Suitable Role?
+            </h2>
 
-              <p className="text-white mt-6 text-lg max-w-3xl mx-auto leading-8">
-                We're always looking for talented engineers,
-                developers and technology enthusiasts.
-                Upload your resume and we'll contact you
-                when a matching opportunity becomes available.
-              </p>
+            <p className="text-white mt-6 text-lg max-w-3xl mx-auto leading-8">
+              We're always looking for talented engineers, developers and
+              technology enthusiasts. Upload your resume and we'll contact
+              you when a matching opportunity becomes available.
+            </p>
 
-              <div className="flex justify-center gap-6 mt-10 flex-wrap">
+            <div className="flex justify-center gap-6 mt-10 flex-wrap">
 
-                <Link to="/apply/general">
+              <Link to="/apply/general">
 
-                  <button
-                    className="
+                <button
+                  className="
                     bg-white
                     text-cyan-700
                     font-bold
@@ -319,17 +304,17 @@ function Careers() {
                     hover:bg-gray-100
                     hover:scale-105
                     duration-300
-                    "
-                  >
-                    Upload Resume
-                  </button>
+                  "
+                >
+                  Upload Resume
+                </button>
 
-                </Link>
+              </Link>
 
-                <Link to="/contact">
+              <Link to="/contact">
 
-                  <button
-                    className="
+                <button
+                  className="
                     border-2
                     border-white
                     text-white
@@ -340,25 +325,22 @@ function Careers() {
                     hover:bg-white
                     hover:text-cyan-700
                     duration-300
-                    "
-                  >
-                    Contact HR
-                  </button>
+                  "
+                >
+                  Contact HR
+                </button>
 
-                </Link>
-
-              </div>
+              </Link>
 
             </div>
 
-          </motion.div>
+          </div>
 
-        </div>
+        </motion.div>
 
-      </section>
+      </div>
 
-    </>
-
+    </section>
   );
 }
 

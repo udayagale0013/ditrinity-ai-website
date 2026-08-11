@@ -17,7 +17,7 @@ function Testimonials() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState("");
 
-  const API_URL = "http://127.0.0.1:8000";
+  const API_URL = "https://ditrinity-ai-backend.onrender.com";
 
   // Load Reviews
   useEffect(() => {
@@ -85,7 +85,7 @@ function Testimonials() {
   };
 
   return (
-    <section className="bg-[#0B1220] py-10">
+    <section>
 
       {/* ================================= */}
       {/* HEADING */}

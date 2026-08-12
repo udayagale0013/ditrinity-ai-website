@@ -85,7 +85,7 @@ function Testimonials() {
   };
 
   return (
-    <section>
+    <section className="bg-[#0B1220] py-10">
 
       {/* ================================= */}
       {/* HEADING */}

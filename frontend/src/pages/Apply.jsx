@@ -36,7 +36,7 @@ function Apply() {
       setLoading(true);
 
       const res = await axios.post(
-        "http://127.0.0.1:8000/resume-parse",
+        "https://ditrinity-ai-backend.onrender.com/contact/resume-parse",
         data,
         {
           headers: {
@@ -90,7 +90,7 @@ function Apply() {
       setLoading(true);
 
       await axios.post(
-        "http://127.0.0.1:8000/apply",
+        "https://ditrinity-ai-backend.onrender.com/contact/apply",
         data,
         {
           headers: {

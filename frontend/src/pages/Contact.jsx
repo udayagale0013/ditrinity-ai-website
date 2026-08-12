@@ -38,7 +38,7 @@ function Contact() {
       setLoading(true);
 
       await axios.post(
-        "http://127.0.0.1:8000/contact",
+        "https://ditrinity-ai-backend.onrender.com/contact",
         formData
       );
 

@@ -6,8 +6,13 @@ import smtplib
 import os
 from email.message import EmailMessage
 
+
 router = APIRouter()
 
+
+# =========================================================
+# CONTACT REQUEST MODEL
+# =========================================================
 
 class ContactRequest(BaseModel):
     name: str
@@ -18,19 +23,44 @@ class ContactRequest(BaseModel):
     message: str
 
 
+# =========================================================
+# CONTACT API
+# =========================================================
+
 @router.post("/contact")
 def submit_contact(data: ContactRequest):
 
+    conn = None
+
     try:
 
-        # --------------------------------
-        # DATABASE
-        # --------------------------------
+        print("========================================", flush=True)
+        print("NEW CONTACT REQUEST", flush=True)
 
-        conn = sqlite3.connect("applications.db")
+        print("Name:", data.name, flush=True)
+        print("Email:", data.email, flush=True)
+        print("Phone:", data.phone, flush=True)
+        print("Company:", data.company, flush=True)
+        print("Subject:", data.subject, flush=True)
+
+        # =================================================
+        # DATABASE
+        # =================================================
+
+        database = "applications.db"
+
+        print(
+            "DATABASE PATH:",
+            os.path.abspath(database),
+            flush=True
+        )
+
+        conn = sqlite3.connect(database)
+
         cursor = conn.cursor()
 
-        cursor.execute("""
+        cursor.execute(
+            """
             CREATE TABLE IF NOT EXISTS contacts (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT NOT NULL,
@@ -41,17 +71,19 @@ def submit_contact(data: ContactRequest):
                 message TEXT NOT NULL,
                 submitted_at TEXT NOT NULL
             )
-        """)
+            """
+        )
 
         submitted_at = datetime.now().strftime(
             "%Y-%m-%d %H:%M:%S"
         )
 
-        # --------------------------------
-        # SAVE CONTACT FORM
-        # --------------------------------
+        # =================================================
+        # SAVE CONTACT
+        # =================================================
 
-        cursor.execute("""
+        cursor.execute(
+            """
             INSERT INTO contacts (
                 name,
                 email,
@@ -62,56 +94,102 @@ def submit_contact(data: ContactRequest):
                 submitted_at
             )
             VALUES (?, ?, ?, ?, ?, ?, ?)
-        """, (
-            data.name,
-            data.email,
-            data.phone,
-            data.company,
-            data.subject,
-            data.message,
-            submitted_at
-        ))
+            """,
+            (
+                data.name,
+                data.email,
+                data.phone,
+                data.company,
+                data.subject,
+                data.message,
+                submitted_at
+            )
+        )
 
         conn.commit()
 
         contact_id = cursor.lastrowid
 
+        print(
+            "CONTACT SAVED TO DATABASE. ID:",
+            contact_id,
+            flush=True
+        )
+
+        # Close database
         conn.close()
+        conn = None
 
-        # --------------------------------
-        # SEND EMAIL
-        # --------------------------------
+        # =================================================
+        # EMAIL CONFIGURATION
+        # =================================================
 
-        try:
+        gmail_address = os.getenv("GMAIL_USER")
+        gmail_password = os.getenv("GMAIL_APP_PASSWORD")
+        admin_email = os.getenv("ADMIN_EMAIL")
 
-            gmail_address = os.getenv("GMAIL_USER")
-            gmail_password = os.getenv("GMAIL_APP_PASSWORD")
-            admin_email = os.getenv("ADMIN_EMAIL")
+        print("----------------------------------------", flush=True)
+        print("CONTACT EMAIL DEBUG", flush=True)
 
-            print("GMAIL USER:", gmail_address)
-            print("ADMIN EMAIL:", admin_email)
-            print(
-                "PASSWORD EXISTS:",
-                bool(gmail_password)
+        print(
+            "GMAIL USER:",
+            gmail_address,
+            flush=True
+        )
+
+        print(
+            "ADMIN EMAIL:",
+            admin_email,
+            flush=True
+        )
+
+        print(
+            "PASSWORD EXISTS:",
+            bool(gmail_password),
+            flush=True
+        )
+
+        # =================================================
+        # CHECK ENV VARIABLES
+        # =================================================
+
+        if not gmail_address:
+
+            raise Exception(
+                "GMAIL_USER environment variable is missing."
             )
 
-            # Create email
+        if not gmail_password:
 
-            msg = EmailMessage()
-
-            msg["Subject"] = (
-                f"New Contact Enquiry - {data.subject}"
+            raise Exception(
+                "GMAIL_APP_PASSWORD environment variable is missing."
             )
 
-            msg["From"] = gmail_address
+        if not admin_email:
 
-            msg["To"] = admin_email
+            raise Exception(
+                "ADMIN_EMAIL environment variable is missing."
+            )
 
-            msg.set_content(
-                f"""
+        # =================================================
+        # CREATE EMAIL
+        # =================================================
+
+        msg = EmailMessage()
+
+        msg["Subject"] = (
+            f"New Contact Enquiry - {data.subject}"
+        )
+
+        msg["From"] = gmail_address
+
+        msg["To"] = admin_email
+
+        msg.set_content(
+            f"""
 New Contact Enquiry Received
 
---------------------------------
+========================================
 
 Contact ID:
 {contact_id}
@@ -137,60 +215,89 @@ Message:
 Submitted At:
 {submitted_at}
 
---------------------------------
+========================================
 
 Please contact the customer.
 """
-            )
+        )
 
-            # --------------------------------
-            # GMAIL SMTP
-            # --------------------------------
+        # =================================================
+        # GMAIL SMTP
+        # =================================================
 
-            with smtplib.SMTP(
-                "smtp.gmail.com",
-                587
-            ) as server:
+        print(
+            "Connecting to Gmail SMTP...",
+            flush=True
+        )
 
-                server.starttls()
+        with smtplib.SMTP(
+            "smtp.gmail.com",
+            587,
+            timeout=30
+        ) as server:
 
-                server.login(
-                    gmail_address,
-                    gmail_password
-                )
+            server.ehlo()
 
-                server.send_message(msg)
+            server.starttls()
 
-            print(
-                "CONTACT EMAIL SENT SUCCESSFULLY"
-            )
-
-        except Exception as mail_error:
+            server.ehlo()
 
             print(
-                "CONTACT EMAIL ERROR:",
-                mail_error
+                "Logging in to Gmail...",
+                flush=True
             )
 
-        # --------------------------------
-        # SUCCESS RESPONSE
-        # --------------------------------
+            server.login(
+                gmail_address,
+                gmail_password
+            )
+
+            print(
+                "Sending contact email...",
+                flush=True
+            )
+
+            server.send_message(msg)
+
+        # =================================================
+        # EMAIL SUCCESS
+        # =================================================
+
+        print(
+            "CONTACT EMAIL SENT SUCCESSFULLY",
+            flush=True
+        )
+
+        print("========================================", flush=True)
 
         return {
             "success": True,
             "message": "Contact form submitted successfully.",
-            "contact_id": contact_id
+            "contact_id": contact_id,
+            "email_sent": True
         }
+
+    # =====================================================
+    # ERROR
+    # =====================================================
 
     except Exception as e:
 
+        if conn:
+            conn.rollback()
+            conn.close()
+
         print(
             "CONTACT ERROR:",
-            e
+            repr(e),
+            flush=True
         )
+
+        print("========================================", flush=True)
 
         return {
             "success": False,
             "message": "Contact form submission failed.",
-            "error": str(e)
+            "error": str(e),
+            "email_sent": False
         }

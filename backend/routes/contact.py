@@ -2,17 +2,11 @@ from fastapi import APIRouter
 from pydantic import BaseModel
 import sqlite3
 from datetime import datetime
-import smtplib
 import os
-from email.message import EmailMessage
-
+import requests
 
 router = APIRouter()
 
-
-# =========================================================
-# CONTACT REQUEST MODEL
-# =========================================================
 
 class ContactRequest(BaseModel):
     name: str
@@ -23,44 +17,32 @@ class ContactRequest(BaseModel):
     message: str
 
 
-# =========================================================
-# CONTACT API
-# =========================================================
-
 @router.post("/contact")
 def submit_contact(data: ContactRequest):
 
-    conn = None
-
     try:
-
         print("========================================", flush=True)
         print("NEW CONTACT REQUEST", flush=True)
 
-        print("Name:", data.name, flush=True)
-        print("Email:", data.email, flush=True)
-        print("Phone:", data.phone, flush=True)
-        print("Company:", data.company, flush=True)
-        print("Subject:", data.subject, flush=True)
-
-        # =================================================
+        # ========================================
         # DATABASE
-        # =================================================
+        # ========================================
 
-        database = "applications.db"
+        database_path = os.path.join(
+            os.path.dirname(os.path.dirname(__file__)),
+            "applications.db"
+        )
 
         print(
             "DATABASE PATH:",
-            os.path.abspath(database),
+            database_path,
             flush=True
         )
 
-        conn = sqlite3.connect(database)
-
+        conn = sqlite3.connect(database_path)
         cursor = conn.cursor()
 
-        cursor.execute(
-            """
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS contacts (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT NOT NULL,
@@ -71,19 +53,13 @@ def submit_contact(data: ContactRequest):
                 message TEXT NOT NULL,
                 submitted_at TEXT NOT NULL
             )
-            """
-        )
+        """)
 
         submitted_at = datetime.now().strftime(
             "%Y-%m-%d %H:%M:%S"
         )
 
-        # =================================================
-        # SAVE CONTACT
-        # =================================================
-
-        cursor.execute(
-            """
+        cursor.execute("""
             INSERT INTO contacts (
                 name,
                 email,
@@ -94,21 +70,21 @@ def submit_contact(data: ContactRequest):
                 submitted_at
             )
             VALUES (?, ?, ?, ?, ?, ?, ?)
-            """,
-            (
-                data.name,
-                data.email,
-                data.phone,
-                data.company,
-                data.subject,
-                data.message,
-                submitted_at
-            )
-        )
+        """, (
+            data.name,
+            data.email,
+            data.phone,
+            data.company,
+            data.subject,
+            data.message,
+            submitted_at
+        ))
 
         conn.commit()
 
         contact_id = cursor.lastrowid
+
+        conn.close()
 
         print(
             "CONTACT SAVED TO DATABASE. ID:",
@@ -116,24 +92,19 @@ def submit_contact(data: ContactRequest):
             flush=True
         )
 
-        # Close database
-        conn.close()
-        conn = None
+        # ========================================
+        # RESEND EMAIL
+        # ========================================
 
-        # =================================================
-        # EMAIL CONFIGURATION
-        # =================================================
-
-        gmail_address = os.getenv("GMAIL_USER")
-        gmail_password = os.getenv("GMAIL_APP_PASSWORD")
+        resend_api_key = os.getenv("RESEND_API_KEY")
         admin_email = os.getenv("ADMIN_EMAIL")
 
         print("----------------------------------------", flush=True)
-        print("CONTACT EMAIL DEBUG", flush=True)
+        print("RESEND EMAIL DEBUG", flush=True)
 
         print(
-            "GMAIL USER:",
-            gmail_address,
+            "RESEND API KEY EXISTS:",
+            bool(resend_api_key),
             flush=True
         )
 
@@ -143,52 +114,22 @@ def submit_contact(data: ContactRequest):
             flush=True
         )
 
-        print(
-            "PASSWORD EXISTS:",
-            bool(gmail_password),
-            flush=True
-        )
-
-        # =================================================
-        # CHECK ENV VARIABLES
-        # =================================================
-
-        if not gmail_address:
-
+        if not resend_api_key:
             raise Exception(
-                "GMAIL_USER environment variable is missing."
-            )
-
-        if not gmail_password:
-
-            raise Exception(
-                "GMAIL_APP_PASSWORD environment variable is missing."
+                "RESEND_API_KEY environment variable is missing."
             )
 
         if not admin_email:
-
             raise Exception(
                 "ADMIN_EMAIL environment variable is missing."
             )
 
-        # =================================================
-        # CREATE EMAIL
-        # =================================================
+        # ========================================
+        # EMAIL CONTENT
+        # ========================================
 
-        msg = EmailMessage()
-
-        msg["Subject"] = (
-            f"New Contact Enquiry - {data.subject}"
-        )
-
-        msg["From"] = gmail_address
-
-        msg["To"] = admin_email
-
-        msg.set_content(
-            f"""
+        email_text = f"""
 New Contact Enquiry Received
-
 ========================================
 
 Contact ID:
@@ -219,49 +160,55 @@ Submitted At:
 
 Please contact the customer.
 """
+
+        # ========================================
+        # RESEND API
+        # ========================================
+
+        response = requests.post(
+            "https://api.resend.com/emails",
+            headers={
+                "Authorization": f"Bearer {resend_api_key}",
+                "Content-Type": "application/json"
+            },
+            json={
+                "from": "onboarding@resend.dev",
+                "to": [admin_email],
+                "subject": f"New Contact Enquiry - {data.subject}",
+                "text": email_text
+            },
+            timeout=30
         )
 
-        # =================================================
-        # GMAIL SMTP
-        # =================================================
-
         print(
-            "Connecting to Gmail SMTP...",
+            "RESEND STATUS:",
+            response.status_code,
             flush=True
         )
 
-        with smtplib.SMTP(
-            "smtp.gmail.com",
-            587,
-            timeout=30
-        ) as server:
+        print(
+            "RESEND RESPONSE:",
+            response.text,
+            flush=True
+        )
 
-            server.ehlo()
+        # ========================================
+        # EMAIL FAILED
+        # ========================================
 
-            server.starttls()
+        if response.status_code >= 400:
 
-            server.ehlo()
+            return {
+                "success": False,
+                "message": "Contact saved, but email could not be sent.",
+                "contact_id": contact_id,
+                "email_sent": False,
+                "email_error": response.text
+            }
 
-            print(
-                "Logging in to Gmail...",
-                flush=True
-            )
-
-            server.login(
-                gmail_address,
-                gmail_password
-            )
-
-            print(
-                "Sending contact email...",
-                flush=True
-            )
-
-            server.send_message(msg)
-
-        # =================================================
-        # EMAIL SUCCESS
-        # =================================================
+        # ========================================
+        # SUCCESS
+        # ========================================
 
         print(
             "CONTACT EMAIL SENT SUCCESSFULLY",
@@ -277,15 +224,7 @@ Please contact the customer.
             "email_sent": True
         }
 
-    # =====================================================
-    # ERROR
-    # =====================================================
-
     except Exception as e:
-
-        if conn:
-            conn.rollback()
-            conn.close()
 
         print(
             "CONTACT ERROR:",
@@ -293,11 +232,8 @@ Please contact the customer.
             flush=True
         )
 
-        print("========================================", flush=True)
-
         return {
             "success": False,
             "message": "Contact form submission failed.",
-            "error": str(e),
-            "email_sent": False
+            "error": str(e)
         }
